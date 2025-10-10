@@ -1,0 +1,26 @@
+# Copy this content to create your .env file
+# Go to remix-backend folder and create a file called .env
+
+# Network Configuration
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/e6923618de1444fb9f023749bf21ade0
+PRIVATE_KEY=0xc44cf6675f40d9d2a52aef37bdbe841b18e5d5fb844df73fd4393aaecc23da1f
+WALLET_ADDRESS=0x3d5A311f8cbF658E88e55b21149E2081971A5628
+
+# Contract Addresses (get these from Remix deployment)
+LT_TOKEN_ADDRESS=
+LAND_NFT_ADDRESS=
+
+# Server Configuration
+PORT=3001
+NODE_ENV=development
+
+# API Keys
+INFURA_PROJECT_ID=e6923618de1444fb9f023749bf21ade0
+ETHERSCAN_API_KEY=
+
+# INSTRUCTIONS:
+# 1. Copy everything above (starting from # Network Configuration)
+# 2. Go to remix-backend folder
+# 3. Create new file called .env
+# 4. Paste the content
+# 5. Save the file

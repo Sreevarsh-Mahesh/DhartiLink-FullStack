@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DhartiWallet</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles-wallet-ui.css">
+  <link rel="stylesheet" href="styles-google-auth.css">
+  <link rel="stylesheet" href="styles-dark-theme.css">
+  <link rel="stylesheet" href="styles-minimal-graphics.css">
+  <link rel="stylesheet" href="styles-logo.css">
+</head>
+<body>
+  <div id="app" class="wallet-container">
+    <!-- Loading Screen with DhartiLink Animation -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-content">
+        <div class="loading-label">INITIALIZING</div>
+        <div class="title-container">
+          <h1 class="animated-title">
+            <span id="dharti-text" class="dharti-text">Dharti</span>
+            <span class="link-text">Wallet</span>
+          </h1>
+          <div class="subtitle">UPI for Land Ownership</div>
+          <div class="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create/Import Wallet Screen -->
+    <div id="setup-screen" class="screen hidden">
+      <div class="header">
+        <div class="logo-container">
+          <img src="logo" alt="DhartiWallet Logo" class="logo-img">
+        </div>
+      </div>
+      
+      <div class="content">
+        <div class="welcome-card">
+          <div class="welcome-icon-text">DhartiWallet</div>
+          <h3>Welcome to DhartiWallet</h3>
+          <p>Your gateway to decentralized land ownership on the blockchain</p>
+        </div>
+
+        <!-- Google Sign-In Section -->
+        <div class="google-auth-section">
+          <div class="auth-divider">
+            <span>Sign in with</span>
+          </div>
+          
+          <button id="google-signin-btn" class="google-btn">
+            <div class="google-btn-content">
+              <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              <span class="google-btn-text">Continue with Google</span>
+            </div>
+          </button>
+
+          <div class="auth-divider">
+            <span>or create wallet manually</span>
+          </div>
+        </div>
+
+        <div class="setup-buttons">
+          <button id="create-wallet-btn" class="btn-primary">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="margin-right: 8px;">
+              <path d="M9 4V14M4 9H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Create New Wallet
+          </button>
+          <button id="import-wallet-btn" class="btn-secondary">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="margin-right: 8px;">
+              <path d="M9 4V14M9 14L13 10M9 14L5 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Import Existing Wallet
+          </button>
+        </div>
+
+        <div class="security-notice">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <rect x="3" y="7" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M6 7V5C6 2.79086 7.79086 1 10 1C12.2091 1 14 2.79086 14 5V7" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="10" cy="11.5" r="1" fill="currentColor"/>
+          </svg>
+          <span>Your keys, your assets. Not your keys, not your assets.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Wallet Screen -->
+    <div id="create-screen" class="screen hidden">
+      <div class="header">
+        <button id="back-from-create" class="btn-back">←</button>
+        <h2>Create Wallet</h2>
+      </div>
+      
+      <div class="content">
+        <div class="seed-phrase-card">
+          <div class="warning-banner">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 7V11M10 14H10.01M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span>Never share your seed phrase with anyone!</span>
+          </div>
+          
+          <h3>Your Secret Recovery Phrase</h3>
+          <p class="subtitle">Write down these 12 words in order and keep them safe.</p>
+          
+          <div id="seed-phrase-grid" class="seed-phrase-grid">
+            <!-- Generated dynamically -->
+          </div>
+
+          <div class="seed-actions">
+            <button id="confirm-seed-btn" class="btn-primary">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right: 6px;">
+                <path d="M13 4L6 11L3 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              I've Written It Down
+            </button>
+            <button id="copy-seed-btn" class="btn-outline">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right: 6px;">
+                <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M3 11V3C3 2.44772 3.44772 2 4 2H11" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              Copy to Clipboard
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Import Wallet Screen -->
+    <div id="import-screen" class="screen hidden">
+      <div class="header">
+        <button id="back-from-import" class="btn-back">←</button>
+        <h2>Import Wallet</h2>
+      </div>
+      
+      <div class="content">
+        <div class="import-card">
+          <h3>Enter Your Seed Phrase</h3>
+          <p class="subtitle">Enter your 12-word secret recovery phrase</p>
+          
+          <textarea 
+            id="import-seed-input" 
+            class="seed-input" 
+            placeholder="Enter your 12 words separated by spaces..."
+            rows="4"
+          ></textarea>
+
+          <button id="import-wallet-submit" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right: 6px;">
+              <path d="M8 3V13M8 13L12 9M8 13L4 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Import Wallet
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Wallet Screen -->
+    <div id="wallet-screen" class="screen hidden">
+      <!-- Header with Account Info -->
+      <div class="wallet-header">
+        <div class="header-top">
+          <span class="header-label">WALLET</span>
+          <button id="settings-btn" class="icon-btn">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 12.5C11.3807 12.5 12.5 11.3807 12.5 10C12.5 8.61929 11.3807 7.5 10 7.5C8.61929 7.5 7.5 8.61929 7.5 10C7.5 11.3807 8.61929 12.5 10 12.5Z" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M16.25 10C16.25 10.4167 16.2083 10.8333 16.1667 11.25L18.3333 12.9167L16.6667 15.8333L14.1667 14.9167C13.5 15.5 12.7917 15.9167 12 16.1667V18.75H8.33333V16.1667C7.54167 15.9167 6.83333 15.5 6.16667 14.9167L3.66667 15.8333L2 12.9167L4.16667 11.25C4.125 10.8333 4.08333 10.4167 4.08333 10C4.08333 9.58333 4.125 9.16667 4.16667 8.75L2 7.08333L3.66667 4.16667L6.16667 5.08333C6.83333 4.5 7.54167 4.08333 8.33333 3.83333V1.25H12V3.83333C12.7917 4.08333 13.5 4.5 14.1667 5.08333L16.6667 4.16667L18.3333 7.08333L16.1667 8.75C16.2083 9.16667 16.25 9.58333 16.25 10Z" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Google Profile Card (shown when authenticated) -->
+        <div id="google-profile-card" class="google-profile-card hidden">
+          <div class="profile-glow"></div>
+          <img id="google-avatar" src="" alt="Profile" class="google-avatar">
+          <div class="google-profile-info">
+            <div class="profile-name-row">
+              <span id="google-name" class="google-name">Loading...</span>
+              <svg class="verified-badge" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 0L9.79611 2.20389L12.4721 1.52786L12.4721 4.52786L15.4721 4.52786L14.7961 7.20389L16 9L14.7961 10.7961L15.4721 13.4721L12.4721 13.4721L12.4721 16.4721L9.79611 15.7961L8 18L6.20389 15.7961L3.52786 16.4721V13.4721H0.527864L1.20389 10.7961L0 9L1.20389 7.20389L0.527864 4.52786H3.52786V1.52786L6.20389 2.20389L8 0Z" fill="#4c82fb"/>
+                <path d="M11 6L7.5 10L5 7.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span id="google-email" class="google-email">email@example.com</span>
+          </div>
+          <button id="disconnect-google-btn" class="disconnect-btn" title="Disconnect Google Account">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M10 4L4 10M4 4L10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="account-card">
+          <div class="account-avatar" id="main-avatar">
+            <div class="avatar-gradient"></div>
+          </div>
+          <div class="account-details">
+            <span class="account-name">Account 1</span>
+            <div class="account-address-row">
+              <span id="account-address" class="account-address" title="0x0000...0000">0x0000...0000</span>
+              <button id="copy-address-btn" class="icon-btn-small">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                  <rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/>
+                  <path d="M5 3V2C5 1.44772 5.44772 1 6 1H12C12.5523 1 13 1.44772 13 2V8C13 8.55228 12.5523 9 12 9H11" stroke="currentColor" stroke-width="1.2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="network-badge">
+          <div class="network-dot"></div>
+          <span id="network-name">India Digital Rupee Network</span>
+        </div>
+      </div>
+
+      <!-- Balance Card -->
+      <div class="main-balance-card">
+        <div class="balance-label-row">
+          <span class="balance-label">Total Balance</span>
+          <button id="refresh-balance-btn" class="icon-btn-small">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M13 3L13 7L9 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M3 13L3 9L7 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M12.5 6C11.8 4.5 10.2 3.5 8.5 3.5C6 3.5 4 5.5 4 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M3.5 10C4.2 11.5 5.8 12.5 7.5 12.5C10 12.5 12 10.5 12 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <div id="balance-amount" class="main-balance">0.0000 ₹</div>
+        <div id="balance-usd" class="balance-fiat">₹0.00 INR</div>
+        
+        <div class="action-buttons-grid">
+          <button id="send-btn" class="main-action-btn">
+            <div class="action-icon-circle">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 15V5M10 5L6 9M10 5L14 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span>Send</span>
+          </button>
+          <button id="receive-btn" class="main-action-btn">
+            <div class="action-icon-circle">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 5V15M10 15L14 11M10 15L6 11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span>Receive</span>
+          </button>
+          <button id="buy-btn" class="main-action-btn">
+            <div class="action-icon-circle">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 6V14M6 10H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span>Buy</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Assets Section -->
+      <div class="assets-section">
+        <div class="section-header">
+          <span class="section-title">Assets</span>
+        </div>
+        
+        <div id="tokens-list" class="asset-list">
+          <div class="asset-item">
+            <div class="asset-icon">₹</div>
+            <div class="asset-info">
+              <span class="asset-name">E-Rupee</span>
+              <span class="asset-symbol">₹</span>
+            </div>
+            <div class="asset-balance">
+              <span class="asset-amount">0.0000</span>
+              <span class="asset-value">₹0.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Send Screen -->
+    <div id="send-screen" class="screen hidden">
+      <div class="header">
+        <button id="back-from-send" class="btn-back">←</button>
+        <h2>Send ETH</h2>
+      </div>
+      
+      <div class="content">
+        <div class="send-card">
+          <div class="input-group">
+            <label>Recipient Address</label>
+            <input 
+              type="text" 
+              id="recipient-address" 
+              class="input-field" 
+              placeholder="0x..."
+            />
+          </div>
+
+          <div class="input-group">
+            <label>Amount (ETH)</label>
+            <input 
+              type="number" 
+              id="send-amount" 
+              class="input-field" 
+              placeholder="0.0"
+              step="0.0001"
+            />
+            <button id="max-amount-btn" class="btn-max">MAX</button>
+          </div>
+
+          <div class="gas-estimate">
+            <span>Estimated Gas Fee:</span>
+            <span id="gas-fee">~0.0005 ETH</span>
+          </div>
+
+          <button id="send-confirm-btn" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right: 6px;">
+              <path d="M14 2L7 9M14 2L9 14L7 9M14 2L2 7L7 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Send Transaction
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Receive Screen -->
+    <div id="receive-screen" class="screen hidden">
+      <div class="header">
+        <button id="back-from-receive" class="btn-back">←</button>
+        <h2>Receive ETH</h2>
+      </div>
+      
+      <div class="content">
+        <div class="receive-card">
+          <h3>Your Wallet Address</h3>
+          <div id="qr-code" class="qr-code">
+            <div class="qr-placeholder">
+              <div class="qr-grid"></div>
+            </div>
+          </div>
+          <div class="address-display">
+            <span id="receive-address">0x0000...0000</span>
+            <button id="copy-receive-address" class="btn-copy-inline">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <rect x="4" y="4" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/>
+                <path d="M10 4V3C10 2.44772 9.55228 2 9 2H3C2.44772 2 2 2.44772 2 3V9C2 9.55228 2.44772 10 3 10H4" stroke="currentColor" stroke-width="1.2"/>
+              </svg>
+            </button>
+          </div>
+          <p class="receive-note">Send only ETH to this address</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settings-screen" class="screen hidden">
+      <div class="header">
+        <button id="back-from-settings" class="btn-back">←</button>
+        <h2>Settings</h2>
+      </div>
+      
+      <div class="content">
+        <div class="settings-list">
+          <button class="settings-item">
+            <span class="settings-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="6" r="3" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M4 18C4 14.6863 6.68629 12 10 12C13.3137 12 16 14.6863 16 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span>Account Details</span>
+          </button>
+          <button id="manage-google-btn" class="settings-item">
+            <span class="settings-icon">
+              <svg width="18" height="18" viewBox="0 0 18 18" style="display: inline-block; vertical-align: middle;">
+                <path fill="#4285F4" d="M16.92 9.19c0-.59-.05-1.15-.15-1.69H9v3.19h4.44c-.19 1.03-.78 1.9-1.66 2.48v2.08h2.68c1.56-1.44 2.46-3.56 2.46-6.06z"/>
+                <path fill="#34A853" d="M9 17.25c2.23 0 4.1-.74 5.46-2l-2.68-2.08c-.74.5-1.67.79-2.78.79-2.15 0-3.97-1.45-4.62-3.4H1.64v2.13c1.36 2.69 4.15 4.56 7.36 4.56z"/>
+                <path fill="#FBBC05" d="M4.38 10.56c-.17-.5-.26-1.02-.26-1.56s.09-1.06.26-1.56V5.31H1.64C1.07 6.41.75 7.67.75 9s.32 2.59.89 3.69l2.74-2.13z"/>
+                <path fill="#EA4335" d="M9 4.04c1.22 0 2.3.42 3.16 1.23l2.36-2.36C13.09 1.57 11.22.75 9 .75c-3.21 0-6 1.87-7.36 4.56l2.74 2.13C4.03 5.49 5.85 4.04 9 4.04z"/>
+              </svg>
+            </span>
+            <span id="google-manage-text">Connect Google Account</span>
+          </button>
+          <button class="settings-item">
+            <span class="settings-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect x="5" y="9" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M7 9V6C7 4.34315 8.34315 3 10 3C11.6569 3 13 4.34315 13 6V9" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="10" cy="13.5" r="1" fill="currentColor"/>
+              </svg>
+            </span>
+            <span>Show Seed Phrase</span>
+          </button>
+          <button class="settings-item">
+            <span class="settings-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M3 10C3 10 6 5 10 5C14 5 17 10 17 10C17 10 14 15 10 15C6 15 3 10 3 10Z" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="10" cy="10" r="2" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </span>
+            <span>Change Network</span>
+          </button>
+          <button id="lock-wallet-btn" class="settings-item danger">
+            <span class="settings-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect x="5" y="9" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M7 9V6C7 4.34315 8.34315 3 10 3C11.6569 3 13 4.34315 13 6V9" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10 12V14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span>Lock Wallet</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
+

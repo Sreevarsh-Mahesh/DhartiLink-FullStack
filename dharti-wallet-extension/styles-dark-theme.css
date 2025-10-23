@@ -1,0 +1,433 @@
+/* Dark Theme Override - Sleek & Modern */
+
+:root {
+  /* Dark Theme Colors */
+  --primary-bg: #0f0f0f;
+  --secondary-bg: #1a1a1a;
+  --card-bg: #1e1e1e;
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  --primary-blue: #3b82f6;
+  --primary-purple: #8b5cf6;
+  --accent-green: #10b981;
+  --accent-gold: #f59e0b;
+  --text-primary: #f5f5f5;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-glow: rgba(59, 130, 246, 0.3);
+  --success: #10b981;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  
+  /* Holographic palette - darker version */
+  --holo-bg: #0a0a0a;
+  --holo-surface: #151515;
+  --holo-fg: #fafafa;
+  --holo-primary: #3b82f6;
+  --holo-accent: #8b5cf6;
+}
+
+body {
+  background: #0a0a0a;
+  color: var(--text-primary);
+}
+
+.wallet-container {
+  background: linear-gradient(135deg, #0a0a0a 0%, #0f0f0f 100%);
+}
+
+/* Darker holographic grid */
+.wallet-container::before {
+  background-image: 
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+    linear-gradient(to right, rgba(139, 92, 246, 0.1) 1px, transparent 1px);
+  background-size: 100% 40px, 40px 100%;
+  opacity: 0.3;
+}
+
+/* Loading screen dark */
+.loading-screen {
+  background: linear-gradient(135deg, #0a0a0a 0%, #0f0f0f 100%);
+}
+
+.loading-screen::before {
+  background-image: 
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.15) 1px, transparent 1px),
+    linear-gradient(to right, rgba(139, 92, 246, 0.15) 1px, transparent 1px);
+  opacity: 0.4;
+}
+
+.animated-title {
+  color: #fafafa;
+  text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+}
+
+.dharti-text::after {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+}
+
+/* Header dark */
+.header {
+  background: rgba(15, 15, 15, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+}
+
+.header::after {
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+}
+
+.header h2 {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Cards dark */
+.welcome-card,
+.seed-phrase-card,
+.import-card,
+.send-card,
+.receive-card {
+  background: rgba(30, 30, 30, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.welcome-icon-text {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4));
+}
+
+/* Buttons dark */
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 6px 25px rgba(59, 130, 246, 0.6);
+}
+
+.btn-secondary,
+.btn-outline {
+  background: rgba(30, 30, 30, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-secondary:hover,
+.btn-outline:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.btn-back {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.btn-back:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+}
+
+/* Seed words dark */
+.seed-word {
+  background: rgba(20, 20, 20, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.seed-word:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+}
+
+/* Account card dark */
+.account-card {
+  background: linear-gradient(135deg, rgba(30, 30, 30, 0.9), rgba(40, 40, 40, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.account-card::before {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+}
+
+/* Balance card dark */
+.main-balance-card {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 25px rgba(59, 130, 246, 0.2);
+}
+
+.main-balance-card::before {
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
+}
+
+.main-balance {
+  background: linear-gradient(135deg, #fff, #e4e4e7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
+}
+
+/* Action buttons dark */
+.main-action-btn {
+  background: rgba(30, 30, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.main-action-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: #3b82f6;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+}
+
+.action-icon-circle {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  box-shadow: 0 3px 15px rgba(59, 130, 246, 0.5);
+}
+
+/* Assets dark */
+.asset-item {
+  background: rgba(30, 30, 30, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.asset-item:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+}
+
+.asset-icon {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  box-shadow: 0 3px 15px rgba(59, 130, 246, 0.5);
+}
+
+/* Settings dark */
+.settings-item {
+  background: rgba(20, 20, 20, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.settings-item:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+}
+
+.settings-item.danger {
+  color: #ef4444;
+}
+
+.settings-item.danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+}
+
+/* Input fields dark */
+.input-field,
+.seed-input {
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.input-field:focus,
+.seed-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Progress bar dark */
+.progress-bar {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
+}
+
+/* Network badge dark */
+.network-badge {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.network-dot {
+  background: #10b981;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
+}
+
+/* Warning and notices dark */
+.warning-banner {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+}
+
+.security-notice {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+/* QR code dark mode */
+.qr-placeholder {
+  background: #fafafa;
+  border: 2px solid #3b82f6;
+  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+}
+
+/* Scrollbar dark */
+.wallet-container::-webkit-scrollbar-track {
+  background: rgba(20, 20, 20, 0.5);
+}
+
+.wallet-container::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+}
+
+.wallet-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.7);
+}
+
+/* Icon buttons dark */
+.icon-btn,
+.icon-btn-small {
+  background: rgba(30, 30, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.icon-btn:hover,
+.icon-btn-small:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+/* Google button dark theme */
+.google-btn {
+  background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(40, 40, 40, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+.google-btn:hover {
+  box-shadow: 
+    0 6px 25px rgba(59, 130, 246, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.google-btn-text {
+  background: linear-gradient(135deg, #f5f5f5 0%, #a1a1aa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Google profile card dark */
+.google-profile-card {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  box-shadow: 
+    0 4px 25px rgba(59, 130, 246, 0.2),
+    0 0 40px rgba(59, 130, 246, 0.1) inset;
+}
+
+.profile-glow {
+  background: radial-gradient(
+    circle at center,
+    rgba(59, 130, 246, 0.3) 0%,
+    transparent 70%
+  );
+}
+
+/* Auth divider dark */
+.auth-divider span {
+  background: var(--holo-bg);
+  color: var(--text-muted);
+}
+
+/* Avatar gradient dark */
+.avatar-gradient {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #10b981);
+}
+
+/* Gas estimate dark */
+.gas-estimate {
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Address display dark */
+.address-display {
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Focus states for dark theme */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Empty state dark */
+.empty-state h3 {
+  color: var(--text-primary);
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+}
+
+/* Better contrast for dark theme */
+.balance-label,
+.section-title,
+.header-label {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.account-name,
+.asset-name,
+.google-name {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.account-address,
+.asset-symbol,
+.google-email {
+  color: var(--text-secondary);
+}
+
+/* Enhance glows and shadows for dark theme */
+.btn-primary,
+.action-icon-circle,
+.asset-icon,
+.google-avatar {
+  box-shadow: 
+    0 4px 15px rgba(59, 130, 246, 0.4),
+    0 0 30px rgba(59, 130, 246, 0.2);
+}
+
+/* Balance amount glow */
+#balance-amount {
+  filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4));
+}
+

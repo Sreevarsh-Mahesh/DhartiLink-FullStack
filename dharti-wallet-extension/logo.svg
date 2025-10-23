@@ -1,0 +1,21 @@
+<svg width="660" height="180" viewBox="0 0 660 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with grid pattern -->
+  <defs>
+    <linearGradient id="underlineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Dharti (in Devanagari script) - Italic serif style -->
+  <text x="60" y="120" font-family="serif" font-size="90" font-style="italic" fill="#fef3c7" font-weight="400">धरती</text>
+  
+  <!-- Red underline under Dharti -->
+  <rect x="60" y="130" width="180" height="4" fill="url(#underlineGrad)" rx="2">
+    <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- LINK - Bold sans-serif style -->
+  <text x="280" y="120" font-family="sans-serif" font-size="90" font-weight="900" letter-spacing="8" fill="#fef3c7">LINK</text>
+</svg>
+

@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "DhartiWallet",
+  "version": "1.0.0",
+  "description": "Your gateway to decentralized land ownership on the blockchain",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs",
+    "identity"
+  ],
+  "oauth2": {
+    "client_id": "YOUR_OAUTH_CLIENT_ID_HERE.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  },
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "http://localhost:3003/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["inpage.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
+

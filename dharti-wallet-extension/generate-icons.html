@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DhartiWallet Icon Generator</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+      color: #f8fafc;
+      padding: 40px;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #4c82fb, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 600px;
+    }
+
+    canvas {
+      display: none;
+    }
+
+    .preview {
+      margin: 30px 0;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    .preview-item {
+      text-align: center;
+    }
+
+    .preview img {
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background: linear-gradient(135deg, #4c82fb, #7c3aed);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 10px;
+      transition: all 0.3s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(76, 130, 251, 0.4);
+    }
+
+    .info {
+      background: rgba(76, 130, 251, 0.1);
+      border: 1px solid rgba(76, 130, 251, 0.3);
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      display: none;
+    }
+
+    code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 DhartiWallet Icon Generator</h1>
+    <p>Generate all required icon files for your extension in one click!</p>
+
+    <div class="preview">
+      <div class="preview-item">
+        <img id="icon16" width="16" height="16">
+        <div>16x16</div>
+      </div>
+      <div class="preview-item">
+        <img id="icon48" width="48" height="48">
+        <div>48x48</div>
+      </div>
+      <div class="preview-item">
+        <img id="icon128" width="128" height="128">
+        <div>128x128</div>
+      </div>
+    </div>
+
+    <button onclick="generateIcons()">Generate Icons</button>
+    <button onclick="downloadAll()">Download All</button>
+
+    <div class="success" id="success">
+      ✅ Icons generated successfully!<br>
+      Click the download buttons below each icon, or use "Download All"
+    </div>
+
+    <div class="info">
+      <h3>📋 Instructions:</h3>
+      <ol style="padding-left: 20px; line-height: 1.8;">
+        <li>Click <strong>"Generate Icons"</strong> to create the icons</li>
+        <li>Click <strong>"Download All"</strong> to save them</li>
+        <li>Move the downloaded files to the <code>icons/</code> folder:
+          <ul style="margin-top: 10px;">
+            <li><code>icon16.png</code></li>
+            <li><code>icon48.png</code></li>
+            <li><code>icon128.png</code></li>
+          </ul>
+        </li>
+        <li>Reload the extension in Chrome</li>
+      </ol>
+    </div>
+  </div>
+
+  <canvas id="canvas16" width="16" height="16"></canvas>
+  <canvas id="canvas48" width="48" height="48"></canvas>
+  <canvas id="canvas128" width="128" height="128"></canvas>
+
+  <script>
+    function drawIcon(canvas, size) {
+      const ctx = canvas.getContext('2d');
+      const centerX = size / 2;
+      const centerY = size / 2;
+
+      // Create gradient background
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#4c82fb');
+      gradient.addColorStop(0.5, '#7c3aed');
+      gradient.addColorStop(1, '#10b981');
+
+      // Draw background circle
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, size * 0.45, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw rings
+      const ringRadii = [0.42, 0.35, 0.28];
+      const ringWidths = [size * 0.02, size * 0.015, size * 0.015];
+      
+      ringRadii.forEach((ratio, i) => {
+        ctx.strokeStyle = `rgba(255, 255, 255, ${0.3 - i * 0.1})`;
+        ctx.lineWidth = ringWidths[i];
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, size * ratio, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      // Draw letter D
+      ctx.fillStyle = 'white';
+      ctx.font = `bold ${size * 0.5}px Arial, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('D', centerX, centerY);
+
+      return canvas.toDataURL('image/png');
+    }
+
+    function generateIcons() {
+      const sizes = [
+        { canvas: 'canvas16', img: 'icon16', size: 16 },
+        { canvas: 'canvas48', img: 'icon48', size: 48 },
+        { canvas: 'canvas128', img: 'icon128', size: 128 }
+      ];
+
+      sizes.forEach(({ canvas, img, size }) => {
+        const canvasEl = document.getElementById(canvas);
+        const dataUrl = drawIcon(canvasEl, size);
+        document.getElementById(img).src = dataUrl;
+      });
+
+      document.getElementById('success').style.display = 'block';
+    }
+
+    function downloadAll() {
+      const sizes = [
+        { img: 'icon16', name: 'icon16.png' },
+        { img: 'icon48', name: 'icon48.png' },
+        { img: 'icon128', name: 'icon128.png' }
+      ];
+
+      sizes.forEach(({ img, name }) => {
+        const imgEl = document.getElementById(img);
+        if (imgEl.src && imgEl.src.startsWith('data:')) {
+          const link = document.createElement('a');
+          link.download = name;
+          link.href = imgEl.src;
+          link.click();
+        }
+      });
+    }
+
+    // Auto-generate on load
+    window.addEventListener('load', generateIcons);
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DhartiWallet Test Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+      color: #f8fafc;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 36px;
+      background: linear-gradient(135deg, #4c82fb, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .card h2 {
+      margin-bottom: 16px;
+      font-size: 20px;
+      color: #4c82fb;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .status.disconnected {
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+
+    .dot.red {
+      background: #ef4444;
+    }
+
+    button {
+      background: linear-gradient(135deg, #4c82fb, #7c3aed);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-right: 12px;
+      margin-bottom: 12px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(76, 130, 251, 0.4);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #f8fafc;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #4c82fb;
+    }
+
+    .result {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #94a3b8;
+      word-break: break-all;
+      margin-top: 12px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .info {
+      background: rgba(76, 130, 251, 0.1);
+      border: 1px solid rgba(76, 130, 251, 0.3);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 13px;
+      color: #4c82fb;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌍 DhartiWallet Test Page</h1>
+
+    <!-- Status Card -->
+    <div class="card">
+      <h2>Connection Status</h2>
+      <div id="status" class="status disconnected">
+        <div class="dot red"></div>
+        <span>Not Connected - Install DhartiWallet Extension</span>
+      </div>
+      <div id="account-info" style="display: none;">
+        <p style="margin-bottom: 8px; color: #94a3b8;">Connected Account:</p>
+        <div class="result" id="account-display"></div>
+      </div>
+    </div>
+
+    <!-- Connect Card -->
+    <div class="card">
+      <h2>1. Connect Wallet</h2>
+      <div class="info">
+        ℹ️ Make sure DhartiWallet extension is installed and you've created a wallet.
+      </div>
+      <button onclick="connectWallet()">Connect DhartiWallet</button>
+      <div class="result" id="connect-result"></div>
+    </div>
+
+    <!-- Send Transaction Card -->
+    <div class="card">
+      <h2>2. Send Transaction</h2>
+      <input type="text" id="send-to" placeholder="Recipient Address (0x...)">
+      <input type="text" id="send-amount" placeholder="Amount in ETH (e.g., 0.1)">
+      <button onclick="sendTransaction()">Send ETH</button>
+      <div class="result" id="send-result"></div>
+    </div>
+
+    <!-- Sign Message Card -->
+    <div class="card">
+      <h2>3. Sign Message</h2>
+      <input type="text" id="message" placeholder="Message to sign">
+      <button onclick="signMessage()">Sign Message</button>
+      <div class="result" id="sign-result"></div>
+    </div>
+
+    <!-- Get Balance Card -->
+    <div class="card">
+      <h2>4. Get Balance</h2>
+      <input type="text" id="balance-address" placeholder="Address (leave empty for your account)">
+      <button onclick="getBalance()">Get Balance</button>
+      <div class="result" id="balance-result"></div>
+    </div>
+
+    <!-- Advanced Card -->
+    <div class="card">
+      <h2>Advanced Tests</h2>
+      <button onclick="getChainId()">Get Chain ID</button>
+      <button onclick="getNetworkVersion()">Get Network</button>
+      <button onclick="testProvider()">Test Provider</button>
+      <div class="result" id="advanced-result"></div>
+    </div>
+  </div>
+
+  <script>
+    let currentAccount = null;
+
+    // Check if DhartiWallet is available
+    window.addEventListener('load', () => {
+      if (window.dhartiWallet) {
+        updateStatus(true, 'DhartiWallet Detected - Ready to Connect');
+        log('connect', '✅ DhartiWallet provider detected!');
+      } else {
+        updateStatus(false, 'DhartiWallet Not Found - Please Install Extension');
+        log('connect', '❌ DhartiWallet not found. Please install the extension.');
+      }
+    });
+
+    function updateStatus(connected, message) {
+      const statusEl = document.getElementById('status');
+      const dot = statusEl.querySelector('.dot');
+      const span = statusEl.querySelector('span');
+      
+      if (connected) {
+        statusEl.classList.remove('disconnected');
+        dot.classList.remove('red');
+        span.textContent = message;
+      } else {
+        statusEl.classList.add('disconnected');
+        dot.classList.add('red');
+        span.textContent = message;
+      }
+    }
+
+    function log(target, message) {
+      const resultEl = document.getElementById(`${target}-result`);
+      const timestamp = new Date().toLocaleTimeString();
+      resultEl.innerHTML = `[${timestamp}] ${message}\n` + resultEl.innerHTML;
+    }
+
+    async function connectWallet() {
+      try {
+        if (!window.dhartiWallet) {
+          throw new Error('DhartiWallet not found! Please install the extension.');
+        }
+
+        log('connect', '📞 Requesting accounts...');
+        
+        const accounts = await window.dhartiWallet.request({ 
+          method: 'eth_requestAccounts' 
+        });
+
+        currentAccount = accounts[0];
+        
+        updateStatus(true, `Connected: ${currentAccount.slice(0, 8)}...${currentAccount.slice(-6)}`);
+        
+        document.getElementById('account-info').style.display = 'block';
+        document.getElementById('account-display').textContent = currentAccount;
+        
+        log('connect', `✅ Connected!\nAccount: ${currentAccount}`);
+      } catch (error) {
+        log('connect', `❌ Error: ${error.message}`);
+        updateStatus(false, 'Connection Failed');
+      }
+    }
+
+    async function sendTransaction() {
+      try {
+        if (!currentAccount) {
+          throw new Error('Please connect wallet first');
+        }
+
+        const to = document.getElementById('send-to').value;
+        const amount = document.getElementById('send-amount').value;
+
+        if (!to || !amount) {
+          throw new Error('Please fill in all fields');
+        }
+
+        log('send', `📤 Sending ${amount} ETH to ${to}...`);
+
+        const txHash = await window.dhartiWallet.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            from: currentAccount,
+            to: to,
+            value: '0x' + (parseFloat(amount) * 1e18).toString(16)
+          }]
+        });
+
+        log('send', `✅ Transaction sent!\nHash: ${txHash}`);
+      } catch (error) {
+        log('send', `❌ Error: ${error.message}`);
+      }
+    }
+
+    async function signMessage() {
+      try {
+        if (!currentAccount) {
+          throw new Error('Please connect wallet first');
+        }
+
+        const message = document.getElementById('message').value;
+
+        if (!message) {
+          throw new Error('Please enter a message');
+        }
+
+        log('sign', `✍️ Signing message: "${message}"...`);
+
+        const signature = await window.dhartiWallet.request({
+          method: 'personal_sign',
+          params: [message, currentAccount]
+        });
+
+        log('sign', `✅ Message signed!\nSignature: ${signature}`);
+      } catch (error) {
+        log('sign', `❌ Error: ${error.message}`);
+      }
+    }
+
+    async function getBalance() {
+      try {
+        const address = document.getElementById('balance-address').value || currentAccount;
+
+        if (!address) {
+          throw new Error('Please connect wallet or enter an address');
+        }
+
+        log('balance', `💰 Fetching balance for ${address}...`);
+
+        const balance = await window.dhartiWallet.request({
+          method: 'eth_getBalance',
+          params: [address]
+        });
+
+        log('balance', `✅ Balance retrieved!\n${JSON.stringify(balance, null, 2)}`);
+      } catch (error) {
+        log('balance', `❌ Error: ${error.message}`);
+      }
+    }
+
+    async function getChainId() {
+      try {
+        const chainId = await window.dhartiWallet.request({
+          method: 'eth_chainId'
+        });
+        log('advanced', `✅ Chain ID: ${chainId} (${parseInt(chainId, 16)})`);
+      } catch (error) {
+        log('advanced', `❌ Error: ${error.message}`);
+      }
+    }
+
+    async function getNetworkVersion() {
+      try {
+        const network = await window.dhartiWallet.request({
+          method: 'net_version'
+        });
+        log('advanced', `✅ Network Version: ${network}`);
+      } catch (error) {
+        log('advanced', `❌ Error: ${error.message}`);
+      }
+    }
+
+    function testProvider() {
+      log('advanced', `Provider Info:\n${JSON.stringify({
+        isDhartiWallet: window.dhartiWallet?.isDhartiWallet,
+        chainId: window.dhartiWallet?.chainId,
+        networkVersion: window.dhartiWallet?.networkVersion,
+        selectedAddress: window.dhartiWallet?.selectedAddress
+      }, null, 2)}`);
+    }
+  </script>
+</body>
+</html>
+

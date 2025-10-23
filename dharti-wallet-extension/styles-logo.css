@@ -1,0 +1,33 @@
+/* Logo Styles */
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.logo-img {
+  max-width: 240px;
+  height: auto;
+  filter: drop-shadow(0 0 20px rgba(76, 130, 251, 0.3));
+}
+
+.header .logo-container {
+  padding: 16px 0;
+}
+
+.header .logo-img {
+  max-width: 200px;
+}
+
+/* Responsive logo sizing */
+@media (max-width: 360px) {
+  .logo-img {
+    max-width: 200px;
+  }
+  
+  .header .logo-img {
+    max-width: 180px;
+  }
+}
+

@@ -1,0 +1,647 @@
+/* Google Authentication Styles - Cool & Modern Design */
+
+/* Google Auth Section */
+.google-auth-section {
+  margin: clamp(16px, 4vh, 20px) 0;
+}
+
+/* Auth Divider */
+.auth-divider {
+  position: relative;
+  text-align: center;
+  margin: clamp(14px, 3vh, 18px) 0;
+  overflow: hidden;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.auth-divider::before {
+  left: 0;
+}
+
+.auth-divider::after {
+  right: 0;
+}
+
+.auth-divider span {
+  position: relative;
+  padding: 0 clamp(10px, 3vw, 12px);
+  font-size: clamp(10px, 2.75vw, 11px);
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--holo-bg);
+  z-index: 1;
+}
+
+/* Google Sign-In Button - Premium Design */
+.google-btn {
+  width: 100%;
+  padding: 0;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  min-height: 50px;
+}
+
+.google-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(66, 133, 244, 0.1), rgba(234, 67, 53, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.google-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(66, 133, 244, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+  border-color: rgba(66, 133, 244, 0.3);
+}
+
+.google-btn:hover::before {
+  opacity: 1;
+}
+
+.google-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.google-btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 3vw, 12px);
+  padding: clamp(12px, 3vh, 14px) clamp(16px, 4vw, 20px);
+  position: relative;
+  z-index: 1;
+}
+
+.google-icon {
+  flex-shrink: 0;
+  width: clamp(18px, 5vw, 20px);
+  height: clamp(18px, 5vw, 20px);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.google-btn-text {
+  font-size: clamp(13px, 3.5vw, 14px);
+  font-weight: 600;
+  background: linear-gradient(135deg, #1a1f3a 0%, #4c82fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.01em;
+}
+
+/* Google Profile Card - Shown in Wallet Screen */
+.google-profile-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(66, 133, 244, 0.12), rgba(52, 168, 83, 0.12));
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(66, 133, 244, 0.3);
+  border-radius: 16px;
+  padding: clamp(12px, 3vh, 14px);
+  margin-bottom: clamp(10px, 2.5vh, 12px);
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 3vw, 12px);
+  box-shadow: 
+    0 4px 20px rgba(66, 133, 244, 0.15),
+    0 0 40px rgba(66, 133, 244, 0.1) inset;
+  overflow: hidden;
+  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.google-profile-card.hidden {
+  display: none;
+}
+
+/* Animated Glow Effect */
+.profile-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at center,
+    rgba(66, 133, 244, 0.2) 0%,
+    transparent 70%
+  );
+  animation: rotateGlow 8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotateGlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Google Avatar */
+.google-avatar {
+  width: clamp(42px, 11vw, 48px);
+  height: clamp(42px, 11vw, 48px);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    0 0 0 3px rgba(66, 133, 244, 0.3);
+  object-fit: cover;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Google Profile Info */
+.google-profile-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3px, 1vh, 4px);
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.profile-name-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(5px, 1.5vw, 6px);
+}
+
+.google-name {
+  font-size: clamp(13px, 3.5vw, 14px);
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.verified-badge {
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(76, 130, 251, 0.4));
+  animation: pulse-badge 2s ease-in-out infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+.google-email {
+  font-size: clamp(10px, 2.75vw, 11px);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+/* Disconnect Button */
+.disconnect-btn {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: clamp(6px, 1.5vw, 8px);
+  cursor: pointer;
+  color: #ef4444;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 32px;
+  min-height: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.disconnect-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  transform: scale(1.05);
+}
+
+.disconnect-btn:active {
+  transform: scale(0.95);
+}
+
+/* Loading State for Google Button */
+.google-btn.loading {
+  pointer-events: none;
+}
+
+.google-btn.loading .google-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success Animation */
+@keyframes successPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.google-btn.success {
+  animation: successPulse 0.6s ease-out;
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+/* Settings Google Button */
+#manage-google-btn .settings-icon svg {
+  filter: drop-shadow(0 1px 2px rgba(66, 133, 244, 0.3));
+}
+
+#manage-google-btn.connected {
+  border-left: 3px solid #4285F4;
+}
+
+#manage-google-btn.connected:hover {
+  background: rgba(66, 133, 244, 0.05);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 360px) {
+  .google-btn-content {
+    gap: 8px;
+    padding: 10px 14px;
+  }
+  
+  .google-profile-card {
+    padding: 10px;
+    gap: 8px;
+  }
+  
+  .google-avatar {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+@media (min-width: 400px) {
+  .google-btn {
+    min-height: 54px;
+  }
+  
+  .google-btn-text {
+    font-size: 15px;
+  }
+}
+
+/* Dark Mode Enhancements (future) */
+@media (prefers-color-scheme: dark) {
+  .google-btn {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  }
+  
+  .google-btn:hover {
+    box-shadow: 
+      0 6px 20px rgba(66, 133, 244, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  }
+}
+
+/* Accessibility */
+.google-btn:focus-visible,
+.disconnect-btn:focus-visible {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+/* Tooltip for Verified Badge */
+.verified-badge:hover {
+  cursor: help;
+}
+
+/* Fake Google OAuth Dialog for Demo Mode */
+.google-oauth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.google-oauth-dialog {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 340px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.google-oauth-header {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  background: #fff;
+}
+
+.google-oauth-header svg {
+  flex-shrink: 0;
+}
+
+.google-oauth-header h3 {
+  flex: 1;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #202124;
+}
+
+.close-oauth-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #5f6368;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+
+.close-oauth-btn:hover {
+  background: #f1f3f4;
+}
+
+.google-oauth-content {
+  padding: 24px 20px;
+  background: #fff;
+}
+
+.oauth-demo-notice {
+  background: #e8f0fe;
+  border: 1px solid #d2e3fc;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.oauth-demo-notice strong {
+  display: block;
+  color: #1967d2;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.oauth-demo-notice p {
+  margin: 0;
+  color: #5f6368;
+  font-size: 12px;
+}
+
+.oauth-account {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.oauth-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4285f4, #34a853);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.oauth-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.oauth-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #202124;
+  margin-bottom: 2px;
+}
+
+.oauth-email {
+  font-size: 12px;
+  color: #5f6368;
+}
+
+.oauth-permissions {
+  margin-bottom: 20px;
+}
+
+.oauth-permissions p {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  color: #202124;
+}
+
+.oauth-permissions ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oauth-permissions li {
+  font-size: 12px;
+  color: #5f6368;
+  padding: 4px 0;
+}
+
+.oauth-continue-btn,
+.oauth-cancel-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.oauth-continue-btn {
+  background: #1a73e8;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.oauth-continue-btn:hover {
+  background: #1765cc;
+  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+}
+
+.oauth-continue-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.oauth-cancel-btn {
+  background: transparent;
+  color: #1a73e8;
+  border: 1px solid #dadce0;
+}
+
+.oauth-cancel-btn:hover {
+  background: #f8f9fa;
+}
+
+/* Dark theme for OAuth dialog */
+@media (prefers-color-scheme: dark) {
+  .google-oauth-dialog {
+    background: #202124;
+  }
+
+  .google-oauth-header {
+    background: #202124;
+    border-bottom-color: #3c4043;
+  }
+
+  .google-oauth-header h3 {
+    color: #e8eaed;
+  }
+
+  .close-oauth-btn {
+    color: #9aa0a6;
+  }
+
+  .close-oauth-btn:hover {
+    background: #3c4043;
+  }
+
+  .google-oauth-content {
+    background: #202124;
+  }
+
+  .oauth-demo-notice {
+    background: rgba(26, 115, 232, 0.15);
+    border-color: rgba(26, 115, 232, 0.3);
+  }
+
+  .oauth-demo-notice p {
+    color: #9aa0a6;
+  }
+
+  .oauth-account {
+    background: #292a2d;
+  }
+
+  .oauth-name {
+    color: #e8eaed;
+  }
+
+  .oauth-email {
+    color: #9aa0a6;
+  }
+
+  .oauth-permissions p {
+    color: #e8eaed;
+  }
+
+  .oauth-permissions li {
+    color: #9aa0a6;
+  }
+
+  .oauth-cancel-btn {
+    color: #8ab4f8;
+    border-color: #5f6368;
+  }
+
+  .oauth-cancel-btn:hover {
+    background: #3c4043;
+  }
+}
+

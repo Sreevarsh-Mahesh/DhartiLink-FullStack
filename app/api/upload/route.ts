@@ -165,7 +165,7 @@ async function mintLandNFT(
     
     // Create provider and signer
     const provider = new ethers.JsonRpcProvider(SEPOLIA_RPC_URL)
-    const privateKey = process.env.PRIVATE_KEY
+    const privateKey = process.env.PRIVATE_KEY?.trim()
     if (!privateKey) {
       throw new Error('Private key not configured')
     }
@@ -263,7 +263,7 @@ async function mintLandNFT(
 async function listNFTForSale(tokenId: string, price: string, sellerAddress: string): Promise<string> {
   try {
     const provider = new ethers.JsonRpcProvider(SEPOLIA_RPC_URL)
-    const privateKey = process.env.PRIVATE_KEY
+    const privateKey = process.env.PRIVATE_KEY?.trim()
     if (!privateKey) {
       throw new Error('Private key not configured')
     }

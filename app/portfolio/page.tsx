@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, MapPin, DollarSign, Calendar, Eye, Navigation } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ArrowLeft, MapPin, DollarSign, Calendar, Eye, Navigation, Receipt, ExternalLink, Loader2, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 import { useSoundManager } from '@/components/sound-manager'
+import { useWalletContext, WalletProvider } from '@/contexts/wallet-context'
 import dynamic from 'next/dynamic'
 
 // Dynamically import the map component
@@ -19,40 +21,99 @@ const MapHologramSection = dynamic(() => import('@/components/map-hologram-secti
   )
 })
 
-export default function PortfolioPage() {
+interface LandNFT {
+  tokenId: string
+  owner: string
+  metadata: {
+    name: string
+    description: string
+    image: string
+    attributes: Array<{
+      trait_type: string
+      value: string
+    }>
+    coordinates: {
+      latitude: number
+      longitude: number
+    }
+  }
+  price?: string
+  isListed: boolean
+  coordinates?: string
+  documentURI?: string
+}
+
+interface Transaction {
+  hash: string
+  type: 'mint' | 'buy' | 'sell' | 'list'
+  tokenId?: string
+  amount?: string
+  timestamp: string
+  status: 'success' | 'pending' | 'failed'
+  blockNumber?: string
+}
+
+function PortfolioPageContent() {
+  const { account, isConnected } = useWalletContext()
   const [selectedProperty, setSelectedProperty] = useState<any>(null)
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list')
+  const [activeTab, setActiveTab] = useState('nfts')
   const { playButtonClick, playCardHover, playMapZoom } = useSoundManager()
 
-  // Mock purchased properties data
-  const [purchasedProperties, setPurchasedProperties] = useState([
-    {
-      id: 'TN-CHN-2001',
-      title: 'Chennai Tech Park',
-      location: 'Chennai, Tamil Nadu',
-      area: '2.5 acres',
-      purchasePrice: '₹2,50,00,000',
-      currentValue: '₹2,75,00,000',
-      purchaseDate: '2024-01-15',
-      coordinates: [13.0827, 80.2707],
-      type: 'Commercial',
-      status: 'Owned',
-      documents: ['Title Deed', 'Survey Certificate', 'Tax Receipt']
-    },
-    {
-      id: 'KA-BLR-1004',
-      title: 'Bangalore IT Hub',
-      location: 'Bangalore, Karnataka',
-      area: '1.2 acres',
-      purchasePrice: '₹1,20,00,000',
-      currentValue: '₹1,35,00,000',
-      purchaseDate: '2024-02-20',
-      coordinates: [12.9716, 77.5946],
-      type: 'Residential',
-      status: 'Owned',
-      documents: ['Title Deed', 'Survey Certificate', 'Tax Receipt']
+  // Real data states
+  const [userNFTs, setUserNFTs] = useState<LandNFT[]>([])
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
+
+  // Load user's NFTs and transactions
+  useEffect(() => {
+    if (account && isConnected) {
+      loadPortfolioData()
     }
-  ])
+  }, [account, isConnected])
+
+  const loadPortfolioData = async () => {
+    setLoading(true)
+    try {
+      // Load user's NFTs
+      const nftsResponse = await fetch(`/api/marketplace?action=user-nfts&address=${account}`)
+      const nftsData = await nftsResponse.json()
+      
+      if (nftsData.success) {
+        setUserNFTs(nftsData.data.nfts)
+      }
+
+      // Load transaction history (try enhanced first, fallback to basic)
+      try {
+        const txResponse = await fetch(`/api/transactions/enhanced?address=${account}`)
+        const txData = await txResponse.json()
+        
+        if (txData.success) {
+          setTransactions(txData.data.transactions)
+        }
+      } catch (error) {
+        console.error('Error loading enhanced transactions, falling back to basic:', error)
+        // Fallback to basic transactions
+        const txResponse = await fetch(`/api/transactions?address=${account}`)
+        const txData = await txResponse.json()
+        
+        if (txData.success) {
+          setTransactions(txData.data.transactions)
+        }
+      }
+    } catch (error) {
+      console.error('Error loading portfolio data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const refreshData = async () => {
+    setRefreshing(true)
+    await loadPortfolioData()
+    setRefreshing(false)
+  }
 
   const handlePropertySelect = (property: any) => {
     setSelectedProperty(property)
@@ -60,15 +121,39 @@ export default function PortfolioPage() {
     playMapZoom()
   }
 
-  const totalValue = purchasedProperties.reduce((sum, prop) => {
-    return sum + parseInt(prop.currentValue.replace(/[₹,]/g, ''))
-  }, 0)
+  const getCoordinates = (nft: LandNFT) => {
+    const lat = nft.metadata.attributes.find(attr => attr.trait_type === 'Latitude')?.value
+    const lon = nft.metadata.attributes.find(attr => attr.trait_type === 'Longitude')?.value
+    return lat && lon ? `${lat}, ${lon}` : 'Unknown'
+  }
 
-  const totalInvestment = purchasedProperties.reduce((sum, prop) => {
-    return sum + parseInt(prop.purchasePrice.replace(/[₹,]/g, ''))
-  }, 0)
+  const getEtherscanUrl = (hash: string) => {
+    return `https://sepolia.etherscan.io/tx/${hash}`
+  }
 
-  const profit = totalValue - totalInvestment
+  const totalValue = userNFTs.length * 100000 // Mock calculation
+  const totalInvestment = userNFTs.length * 100000 // Mock calculation
+  const profit = 0 // Mock calculation
+
+  if (!isConnected) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <Card className="glass holo-border max-w-md mx-auto">
+          <CardHeader className="text-center">
+            <CardTitle className="text-amber-50 mb-4">Wallet Not Connected</CardTitle>
+            <CardDescription className="text-gray-400 mb-6">
+              Please connect your wallet to view your portfolio and transaction history.
+            </CardDescription>
+            <Link href="/">
+              <Button className="w-full bg-amber-600 hover:bg-amber-700">
+                Go to Home
+              </Button>
+            </Link>
+          </CardHeader>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-black">
@@ -81,6 +166,19 @@ export default function PortfolioPage() {
               <span className="text-lg font-semibold">DhartiLink</span>
             </Link>
             <div className="flex items-center gap-4">
+              <Button
+                onClick={refreshData}
+                disabled={refreshing}
+                variant="outline"
+                className="border-amber-500/30 text-amber-500 hover:bg-amber-500/10"
+              >
+                {refreshing ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                )}
+                Refresh
+              </Button>
               <Badge variant="outline" className="border-amber-500/30 text-amber-500">
                 Portfolio
               </Badge>
@@ -101,7 +199,22 @@ export default function PortfolioPage() {
         </div>
 
         {/* Portfolio Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <Card className="glass holo-border">
+            <CardHeader>
+              <CardTitle className="text-amber-50 flex items-center gap-2">
+                <MapPin className="h-5 w-5" />
+                Total Properties
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-amber-50">
+                {userNFTs.length}
+              </div>
+              <p className="text-sm text-gray-400">Land parcels owned</p>
+            </CardContent>
+          </Card>
+
           <Card className="glass holo-border">
             <CardHeader>
               <CardTitle className="text-amber-50 flex items-center gap-2">
@@ -144,125 +257,216 @@ export default function PortfolioPage() {
                 {profit >= 0 ? '+' : ''}₹{profit.toLocaleString()}
               </div>
               <p className="text-sm text-gray-400">
-                {profit >= 0 ? 'Gain' : 'Loss'} ({((profit / totalInvestment) * 100).toFixed(2)}%)
+                {profit >= 0 ? 'Gain' : 'Loss'} ({totalInvestment > 0 ? ((profit / totalInvestment) * 100).toFixed(2) : 0}%)
               </p>
             </CardContent>
           </Card>
         </div>
 
-        {/* View Toggle */}
-        <div className="flex justify-center mb-8">
-          <div className="flex bg-gray-900/50 rounded-lg p-1">
-            <Button
-              variant={viewMode === 'list' ? 'default' : 'ghost'}
-              onClick={() => {
-                setViewMode('list')
-                playButtonClick()
-              }}
-              className="bg-amber-600 hover:bg-amber-700"
-            >
-              List View
-            </Button>
-            <Button
-              variant={viewMode === 'map' ? 'default' : 'ghost'}
-              onClick={() => {
-                setViewMode('map')
-                playButtonClick()
-              }}
-              className="bg-amber-600 hover:bg-amber-700"
-            >
-              Map View
-            </Button>
-          </div>
-        </div>
+        {/* Tabs for NFTs and Transactions */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsTrigger value="nfts" className="flex items-center gap-2">
+              <MapPin className="h-4 w-4" />
+              My Land NFTs ({userNFTs.length})
+            </TabsTrigger>
+            <TabsTrigger value="transactions" className="flex items-center gap-2">
+              <Receipt className="h-4 w-4" />
+              Transaction History ({transactions.length})
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Content based on view mode */}
-        {viewMode === 'list' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {purchasedProperties.map((property) => (
-              <Card 
-                key={property.id} 
-                className="glass holo-border hover:scale-105 transition-all duration-300 cursor-pointer"
-                onMouseEnter={playCardHover}
-                onClick={() => handlePropertySelect(property)}
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <Badge className="bg-green-600 text-white">
-                      {property.status}
-                    </Badge>
-                    <Badge variant="outline" className="border-amber-500/30 text-amber-500">
-                      {property.type}
-                    </Badge>
+          <TabsContent value="nfts" className="space-y-6">
+            {/* View Toggle */}
+            <div className="flex justify-center mb-8">
+              <div className="flex bg-gray-900/50 rounded-lg p-1">
+                <Button
+                  variant={viewMode === 'list' ? 'default' : 'ghost'}
+                  onClick={() => {
+                    setViewMode('list')
+                    playButtonClick()
+                  }}
+                  className="bg-amber-600 hover:bg-amber-700"
+                >
+                  List View
+                </Button>
+                <Button
+                  variant={viewMode === 'map' ? 'default' : 'ghost'}
+                  onClick={() => {
+                    setViewMode('map')
+                    playButtonClick()
+                  }}
+                  className="bg-amber-600 hover:bg-amber-700"
+                >
+                  Map View
+                </Button>
+              </div>
+            </div>
+
+            {/* Content based on view mode */}
+            {loading ? (
+              <div className="flex items-center justify-center h-64">
+                <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
+              </div>
+            ) : viewMode === 'list' ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {userNFTs.length === 0 ? (
+                  <div className="col-span-full text-center py-12">
+                    <MapPin className="h-12 w-12 text-gray-500 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-400 mb-2">No Land NFTs Found</h3>
+                    <p className="text-gray-500">You don't own any land NFTs yet. Start by minting your first land!</p>
+                    <Link href="/upload" className="mt-4 inline-block">
+                      <Button className="bg-amber-600 hover:bg-amber-700">
+                        Mint Land NFT
+                      </Button>
+                    </Link>
                   </div>
-                  <CardTitle className="text-amber-50">{property.title}</CardTitle>
-                  <CardDescription className="flex items-center gap-1 text-gray-400">
-                    <MapPin className="h-4 w-4" />
-                    {property.location}
-                  </CardDescription>
+                ) : (
+                  userNFTs.map((nft) => (
+                    <Card 
+                      key={nft.tokenId} 
+                      className="glass holo-border hover:scale-105 transition-all duration-300 cursor-pointer"
+                      onMouseEnter={playCardHover}
+                      onClick={() => handlePropertySelect(nft)}
+                    >
+                      <CardHeader className="pb-3">
+                        <div className="flex items-start justify-between">
+                          <Badge className={nft.isListed ? "bg-green-600 text-white" : "bg-gray-600 text-white"}>
+                            {nft.isListed ? 'Listed' : 'Owned'}
+                          </Badge>
+                          <Badge variant="outline" className="border-amber-500/30 text-amber-500">
+                            Token #{nft.tokenId}
+                          </Badge>
+                        </div>
+                        <CardTitle className="text-amber-50">{nft.metadata.name}</CardTitle>
+                        <CardDescription className="flex items-center gap-1 text-gray-400">
+                          <MapPin className="h-4 w-4" />
+                          {getCoordinates(nft)}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                          <p className="text-sm text-gray-400">{nft.metadata.description}</p>
+                          {nft.isListed && nft.price && (
+                            <div className="flex justify-between">
+                              <span className="text-gray-400">Listed Price:</span>
+                              <span className="text-amber-50 font-bold">{nft.price} ERupee</span>
+                            </div>
+                          )}
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Owner:</span>
+                            <span className="text-sm font-mono text-gray-300">{nft.owner.slice(0, 6)}...{nft.owner.slice(-4)}</span>
+                          </div>
+                        </div>
+
+                        <Button 
+                          className="w-full bg-amber-600 hover:bg-amber-700 flex items-center gap-2"
+                          onClick={playButtonClick}
+                        >
+                          <Eye className="h-4 w-4" />
+                          View Details
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
+            ) : (
+              <Card className="glass holo-border">
+                <CardHeader>
+                  <CardTitle className="text-amber-50 flex items-center gap-2">
+                    <MapPin className="h-5 w-5" />
+                    Interactive Map
+                    {selectedProperty && (
+                      <Badge variant="outline" className="border-amber-500/30 text-amber-500 ml-auto">
+                        {selectedProperty.metadata?.name || selectedProperty.title}
+                      </Badge>
+                    )}
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Area:</span>
-                      <span className="text-amber-50 font-semibold">{property.area}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Purchase Price:</span>
-                      <span className="text-amber-50 font-bold">{property.purchasePrice}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Current Value:</span>
-                      <span className="text-green-500 font-bold">{property.currentValue}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Purchase Date:</span>
-                      <span className="text-gray-300">{property.purchaseDate}</span>
-                    </div>
+                <CardContent className="p-0">
+                  <div className="h-[600px] relative">
+                    <MapHologramSection />
                   </div>
-
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-semibold text-amber-50">Documents:</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {property.documents.map((doc, index) => (
-                        <Badge key={index} variant="outline" className="text-xs border-gray-600 text-gray-300">
-                          {doc}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  <Button 
-                    className="w-full bg-amber-600 hover:bg-amber-700 flex items-center gap-2"
-                    onClick={playButtonClick}
-                  >
-                    <Eye className="h-4 w-4" />
-                    View on Map
-                  </Button>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        ) : (
-          <Card className="glass holo-border">
-            <CardHeader>
-              <CardTitle className="text-amber-50 flex items-center gap-2">
-                <MapPin className="h-5 w-5" />
-                Interactive Map
-                {selectedProperty && (
-                  <Badge variant="outline" className="border-amber-500/30 text-amber-500 ml-auto">
-                    {selectedProperty.title}
-                  </Badge>
-                )}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="h-[600px] relative">
-                <MapHologramSection />
+            )}
+          </TabsContent>
+
+          <TabsContent value="transactions" className="space-y-6">
+            {loading ? (
+              <div className="flex items-center justify-center h-64">
+                <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
               </div>
-            </CardContent>
-          </Card>
-        )}
+            ) : transactions.length === 0 ? (
+              <div className="text-center py-12">
+                <Receipt className="h-12 w-12 text-gray-500 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-400 mb-2">No Transactions Found</h3>
+                <p className="text-gray-500">Your transaction history will appear here once you start minting or trading land NFTs.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {transactions.map((tx, index) => (
+                  <Card key={index} className="glass holo-border">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className={`p-2 rounded-full ${
+                            tx.type === 'mint' ? 'bg-green-500/20' :
+                            tx.type === 'buy' ? 'bg-blue-500/20' :
+                            tx.type === 'sell' ? 'bg-purple-500/20' :
+                            'bg-amber-500/20'
+                          }`}>
+                            {tx.type === 'mint' ? <MapPin className="h-5 w-5 text-green-500" /> :
+                             tx.type === 'buy' ? <DollarSign className="h-5 w-5 text-blue-500" /> :
+                             tx.type === 'sell' ? <Navigation className="h-5 w-5 text-purple-500" /> :
+                             <Receipt className="h-5 w-5 text-amber-500" />}
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-amber-50 capitalize">
+                              {tx.type} {tx.tokenId && `Token #${tx.tokenId}`}
+                            </h3>
+                            <p className="text-sm text-gray-400">
+                              {new Date(tx.timestamp).toLocaleString()}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Badge className={
+                            tx.status === 'success' ? 'bg-green-600' :
+                            tx.status === 'pending' ? 'bg-yellow-600' :
+                            'bg-red-600'
+                          }>
+                            {tx.status}
+                          </Badge>
+                          {tx.blockNumber && (
+                            <Badge variant="outline" className="border-blue-500/30 text-blue-500">
+                              Block #{tx.blockNumber}
+                            </Badge>
+                          )}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => window.open(getEtherscanUrl(tx.hash), '_blank')}
+                            className="border-amber-500/30 text-amber-500 hover:bg-amber-500/10"
+                          >
+                            <ExternalLink className="h-4 w-4 mr-2" />
+                            Verify on Etherscan
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="mt-4 p-3 bg-gray-900/50 rounded-lg">
+                        <p className="text-sm font-mono text-gray-300 break-all">
+                          {tx.hash}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
 
         {/* Portfolio Features */}
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -304,5 +508,13 @@ export default function PortfolioPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function PortfolioPage() {
+  return (
+    <WalletProvider>
+      <PortfolioPageContent />
+    </WalletProvider>
   )
 }

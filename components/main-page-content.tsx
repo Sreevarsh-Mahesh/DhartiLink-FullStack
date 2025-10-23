@@ -11,6 +11,7 @@ import { WalletConnect } from "@/components/wallet-connect"
 import { LandVerification } from "@/components/land-verification"
 import { LandMarketplace } from "@/components/land-marketplace"
 import LandMarketplaceEnhanced from "@/components/land-marketplace-enhanced"
+import ThirdwebMarketplace from "@/components/thirdweb-marketplace"
 import { ClientOnly } from "@/components/client-only"
 import TitleTransition from "@/components/title-transition"
 import { Wallet, Shield, ShoppingCart, Map, Briefcase } from "lucide-react"
@@ -118,7 +119,7 @@ export default function MainPageContent() {
 
       <section className="mx-auto max-w-6xl px-6 py-16">
         <Tabs defaultValue="wallet" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger 
               value="wallet" 
               className="flex items-center gap-2"
@@ -142,6 +143,14 @@ export default function MainPageContent() {
             >
               <ShoppingCart className="h-4 w-4" />
               Marketplace
+            </TabsTrigger>
+            <TabsTrigger 
+              value="thirdweb-marketplace" 
+              className="flex items-center gap-2"
+              onMouseEnter={playTabSwitch}
+            >
+              <ShoppingCart className="h-4 w-4" />
+              Thirdweb
             </TabsTrigger>
             <TabsTrigger 
               value="map" 
@@ -241,6 +250,21 @@ export default function MainPageContent() {
               </Card>
             }>
               <LandMarketplaceEnhanced />
+            </ClientOnly>
+          </TabsContent>
+          
+          <TabsContent value="thirdweb-marketplace" className="mt-6">
+            <ClientOnly fallback={
+              <Card className="glass holo-border">
+                <CardHeader>
+                  <CardTitle>Loading Thirdweb Marketplace...</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Initializing Thirdweb marketplace...</p>
+                </CardContent>
+              </Card>
+            }>
+              <ThirdwebMarketplace />
             </ClientOnly>
           </TabsContent>
           

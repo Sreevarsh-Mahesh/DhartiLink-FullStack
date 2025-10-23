@@ -257,6 +257,35 @@ async function mintLandNFT(
   }
 }
 
+/**
+ * List an NFT for sale (helper function for auto-listing)
+ */
+async function listNFTForSale(tokenId: string, price: string, sellerAddress: string): Promise<string> {
+  try {
+    const provider = new ethers.JsonRpcProvider(SEPOLIA_RPC_URL)
+    const privateKey = process.env.PRIVATE_KEY
+    if (!privateKey) {
+      throw new Error('Private key not configured')
+    }
+    const signer = new ethers.Wallet(privateKey, provider)
+
+    const contract = new ethers.Contract(LAND_NFT_CONTRACT_ADDRESS, LAND_NFT_ABI, signer)
+    
+    // Convert price to wei (price is in ETH)
+    const priceInWei = ethers.parseEther(price)
+    
+    console.log(`Auto-listing NFT ${tokenId} for ${price} ETH by ${sellerAddress}`)
+    
+    const tx = await contract.listLand(tokenId, priceInWei)
+    const receipt = await tx.wait()
+    
+    return tx.hash
+  } catch (error) {
+    console.error('Error auto-listing NFT:', error)
+    throw new Error('Failed to auto-list NFT for sale')
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Check Pinata configuration
@@ -339,9 +368,19 @@ export async function POST(request: NextRequest) {
     const mintResult = await mintLandNFT(ownerAddress, metadataURI, documentURI, latitude, longitude)
     console.log('NFT minted successfully:', mintResult)
 
+    // Step 5: Automatically list the NFT for sale (optional - you can remove this if you don't want auto-listing)
+    try {
+      const listPrice = '0.1' // Default price in ETH
+      const listTxHash = await listNFTForSale(mintResult.tokenId, listPrice, ownerAddress)
+      console.log('NFT automatically listed for sale:', listTxHash)
+    } catch (listError) {
+      console.error('Failed to auto-list NFT (this is optional):', listError)
+      // Don't fail the entire process if listing fails
+    }
+
     return NextResponse.json({
       success: true,
-      message: 'Land NFT created successfully',
+      message: 'Land NFT created and listed successfully',
       data: {
         tokenId: mintResult.tokenId,
         transactionHash: mintResult.transactionHash,

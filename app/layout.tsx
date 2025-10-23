@@ -5,6 +5,7 @@ import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/next"
 import { Toaster } from "@/components/ui/sonner"
 import { PurchasedLandsProvider } from "@/contexts/purchased-lands-context"
+import { ThirdwebProviderWrapper } from "@/components/thirdweb-provider"
 import "./globals.css"
 import { Suspense } from "react"
 
@@ -26,9 +27,11 @@ export default function RootLayout({
         className={`font-sans ${GeistSans.variable} ${GeistMono.variable} holo-theme antialiased`}
         suppressHydrationWarning={true}
       >
-        <PurchasedLandsProvider>
-          <Suspense fallback={null}>{children}</Suspense>
-        </PurchasedLandsProvider>
+        <ThirdwebProviderWrapper>
+          <PurchasedLandsProvider>
+            <Suspense fallback={null}>{children}</Suspense>
+          </PurchasedLandsProvider>
+        </ThirdwebProviderWrapper>
         <Toaster />
         <Analytics />
       </body>
